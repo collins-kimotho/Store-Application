@@ -15,24 +15,25 @@ class Customer(db.Model):
     last_name = db.Column(db.String(100),nullable=False)
     address = db.Column(db.String(100),nullable=False)
     city = db.Column(db.String(100),nullable=False)
-    postcode = db.Column(db.String(100),nullable=False)
+    postcode = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100),nullable=False, unique=True)
-
-    orders = db.relationship('order', backref = 'customer')
-    order_product = db.Table('order_product',
-                             db.Column('order_id', db.Integer, db.ForeignKey('order_id'), primary_key=True),
-                             db.Column('product_id', db.Integer, db.ForeignKey('product_id'), primary_key=True)
+    
+    orders = db.relationship('Order', backref = 'customer')
+    
+order_product = db.Table('order_product',
+    db.Column('order_id', db.Integer, db.ForeignKey('order.id'), primary_key=True),
+    db.Column('product_id', db.Integer, db.ForeignKey('product.id'), primary_key=True)
     )
-                             
-
-
 
 class Order (db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    order_date = db.Column(db.Datetime, nullable=False, default=datetime.utcnow)
-    shipped_date = db.Column(db.Datetime)
-    delivered_date = db.Column(db.Datetime)
+    order_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    shipped_date = db.Column(db.DateTime)
+    delivered_date = db.Column(db.DateTime)
     coupon_date = db.Column(db.String(50))
+
+    products = db.relationship('Product', secondary=order_product)
+
 
 
 class Product (db.Model):
